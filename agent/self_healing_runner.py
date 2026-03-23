@@ -6,70 +6,75 @@ from agent.auto_heal_agent import fix_sql
 
 MAX_RETRIES = 3
 
-
 def parse_dbt_failures(log_output):
     """
-    Parse dbt run/compile output and extract failed models with their errors.
-    Handles both runtime errors and compilation errors.
+    Parse dbt output for both runtime errors and compilation errors.
+    Returns list of {"model": name, "error": message}
     """
-
     failures = []
-    lines = log_output.split("\n")
-
-    current_model = None
-    error_lines = []
+    lines    = log_output.split("\n")
 
     for i, line in enumerate(lines):
 
-        # Runtime failure: "Failure in model mart_xxx"
-        fail_match = re.search(
-            r"(Failure|Error)\s+in\s+model\s+(\w+)", line, re.IGNORECASE
-        )
-        if fail_match:
-            if current_model and error_lines:
-                failures.append({
-                    "model": current_model,
-                    "error": "\n".join(error_lines).strip()
-                })
-            current_model = fail_match.group(2)
-            error_lines = []
-            continue
-
-        # Compilation error: "Model 'model.dbt_project.mart_xxx'"
+        # Compilation error format:
+        # "Model 'model.dbt_project.mart_xxx' ..."
         compile_match = re.search(
-            r"Model '(?:model\.\w+\.)?(\w+)'", line
+            r"Model 'model\.\w+\.(\w+)'", line
         )
-        if compile_match and any(
-            kw in log_output[max(0, log_output.find(line)-200):log_output.find(line)+200]
-            for kw in ("Compilation Error", "depends on", "was not found", "Error")
-        ):
-            if current_model and error_lines:
+        if compile_match:
+            model_name = compile_match.group(1)
+            # Collect the next few lines as the error message
+            error_lines = []
+            for j in range(i, min(i + 8, len(lines))):
+                stripped = lines[j].strip()
+                if stripped:
+                    error_lines.append(stripped)
+            failures.append({
+                "model": model_name,
+                "error": "\n".join(error_lines)
+            })
+            continue
+
+        # Runtime failure format:
+        # "Failure in model mart_xxx" or "ERROR in model mart_xxx"
+        runtime_match = re.search(
+            r"(?:Failure|Error)\s+in\s+model\s+(\w+)", line, re.IGNORECASE
+        )
+        if runtime_match:
+            model_name  = runtime_match.group(1)
+            error_lines = []
+            for j in range(i + 1, min(i + 10, len(lines))):
+                stripped = lines[j].strip()
+                if stripped:
+                    error_lines.append(stripped)
+                else:
+                    break
+            failures.append({
+                "model": model_name,
+                "error": "\n".join(error_lines)
+            })
+            continue
+
+        # dbt node error format:
+        # "model.dbt_project.mart_xxx  ERROR"
+        node_match = re.search(r"model\.\w+\.(\w+)\s+ERROR", line)
+        if node_match:
+            model_name = node_match.group(1)
+            if not any(f["model"] == model_name for f in failures):
                 failures.append({
-                    "model": current_model,
-                    "error": "\n".join(error_lines).strip()
+                    "model": model_name,
+                    "error": line.strip()
                 })
-            current_model = compile_match.group(1)
-            error_lines = []
-            continue
 
-        # Also catch: "model.dbt_project.mart_xxx ... ERROR"
-        model_error_match = re.search(r"model\.\w+\.(\w+).*ERROR", line)
-        if model_error_match:
-            current_model = model_error_match.group(1)
-            error_lines = []
-            continue
+    # Deduplicate by model name, keeping first occurrence
+    seen     = set()
+    deduped  = []
+    for f in failures:
+        if f["model"] not in seen:
+            seen.add(f["model"])
+            deduped.append(f)
 
-        if current_model and line.strip():
-            error_lines.append(line.strip())
-
-    # Capture last failure
-    if current_model and error_lines:
-        failures.append({
-            "model": current_model,
-            "error": "\n".join(error_lines).strip()
-        })
-
-    return failures
+    return deduped
 
 
 def find_model_file(model_name):

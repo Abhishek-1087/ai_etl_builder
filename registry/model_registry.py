@@ -163,7 +163,7 @@ def save_model(name: str, sql: str, schema: dict, template_type: str,
             UPDATE models
             SET sql = ?, quality_score = ?, run_count = run_count + 1, last_used = ?
             WHERE id = ?
-        """, (sql, quality_score, now, existing["id"]))
+        """, (sql, float(quality_score), now, existing["id"]))
         print(f"  Registry: updated '{name}' (run #{existing['run_count'] + 1})")
     else:
         conn.execute("""
@@ -174,7 +174,7 @@ def save_model(name: str, sql: str, schema: dict, template_type: str,
         """, (
             name, domain, template_type, sql, fingerprint,
             json.dumps(table_hints), json.dumps(column_hints),
-            quality_score, now, now
+            float(quality_score), now, now
         ))
         print(f"  Registry: saved new model '{name}' [{domain}]")
 
@@ -196,7 +196,7 @@ def save_run(schema: dict, models_built: int, models_healed: int,
         datetime.utcnow().isoformat(),
         json.dumps(list(schema.keys())),
         models_built, models_healed,
-        trust_score,
+        float(trust_score),
         1 if dbt_success else 0,
         1 if drift_detected else 0
     ))

@@ -73,26 +73,19 @@ def compose_marts(insights: list, schema: dict,
     return results
 
 
-def _retrieve_or_generate(insight: str, schema: dict,
-                          schema_context: str, joins: list) -> tuple:
-    """
-    Attempt to find and adapt a registry model.
-    Returns (model_dict, source_label, confidence).
-    """
+from agent.mart_generator import generate_mart, _enforce_stg_refs
 
-    # Search registry for relevant models
+def _retrieve_or_generate(insight, schema, schema_context, joins):
     candidates = search_models(schema, limit=5)
-
-    # Filter to models relevant to this specific insight
-    relevant = _filter_by_insight(insight, candidates)
+    relevant   = _filter_by_insight(insight, candidates)
 
     if relevant:
         best = relevant[0]
-
-        # Attempt adaptation to current schema
         adapted_sql, confidence = adapt_model(best["sql"], schema)
 
         if confidence >= CONFIDENCE_THRESHOLD:
+            # Enforce stg_ refs on adapted models too
+            adapted_sql = _enforce_stg_refs(adapted_sql)
             source = "registry" if confidence >= 0.9 else "adapted"
             model = {
                 "name":           f"mart_{insight}",
@@ -102,7 +95,6 @@ def _retrieve_or_generate(insight: str, schema: dict,
             }
             return model, source, confidence
 
-    # No good registry match — generate with LLM
     model = generate_mart(insight, schema_context, joins)
     model["registry_match"] = None
     return model, "generated", 0.0

@@ -4,28 +4,48 @@ import re
 
 
 def fix_sql(error, sql):
-
     short_error = error.strip().split("\n")[0][:300]
 
-    prompt = f"""-- Fix this broken SQL for Snowflake.
+    # Remove the config block before sending — we'll add it back
+    sql_body = re.sub(
+        r"\{\{[^}]*config[^}]*\}\}", "", sql
+    ).strip()
+
+    prompt = f"""-- Fix this broken Snowflake dbt SQL.
 -- Error: {short_error}
--- Original SQL:
-{sql}
--- Write corrected SELECT only. No explanation. No CREATE.
+-- All table refs must use stg_ prefix: ref('stg_orders') not ref('orders')
+-- Broken SQL:
+{sql_body}
+-- Fixed SQL (SELECT statement only, no config block):
 SELECT"""
 
     response = ask_llm(prompt)
-    raw_sql = "SELECT" + response
 
-    # Run through dbt converter — handles all syntax normalisation
-    fixed = convert_to_dbt(raw_sql, layer="mart")
+    # Strip any leading SELECT the LLM echoed back
+    response = response.strip()
+    if response.upper().startswith("SELECT"):
+        response = response[6:].lstrip()
 
-    # Final safety: if result is too short, return original unchanged
+    # Rebuild with config + SELECT
+    fixed = f"{{{{ config(materialized='table') }}}}\n\nSELECT\n{response}"
+
+    # Enforce stg_ refs
+    fixed = _enforce_stg_refs(fixed)
+
+    # Final safety check
     if len(fixed.strip()) < 60:
         return sql
 
     return fixed
 
+
+def _enforce_stg_refs(sql: str) -> str:
+    def fix_ref(m):
+        table = m.group(1)
+        if not table.startswith("stg_"):
+            table = f"stg_{table}"
+        return f"{{{{ ref('{table}') }}}}"
+    return re.sub(r"\{\{\s*ref\('([^']+)'\)\s*\}\}", fix_ref, sql)
 
 def _clean_healed_sql(response, original_sql):
 

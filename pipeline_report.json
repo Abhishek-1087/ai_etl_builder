@@ -1,9 +1,9 @@
 {
-  "run_at": "2026-03-20T07:33:38.891660Z",
+  "run_at": "2026-03-23T06:04:18.258632Z",
   "pipeline_status": "SUCCESS",
   "overall_trust_score": 96.4,
   "tables_profiled": 6,
-  "mart_models_generated": 7,
+  "mart_models_generated": 6,
   "schema_drift": {
     "has_drift": false,
     "new_tables": [],
@@ -348,12 +348,11 @@
     }
   ],
   "mart_models": [
-    "mart_total_invoices_per_month",
-    "mart_unpaid_invoice_countdown",
-    "mart_active_customers_segmentation",
-    "mart_top_10_products_mostly_ordered",
-    "mart_best_rep_performance",
-    "mart_revenue_by_region",
-    "mart_customer_signup_trends"
+    "mart_total_active_customers",
+    "mart_monthly_product_sales",
+    "mart_top_selling_products",
+    "mart_customer_segment_breakdown",
+    "mart_rep_quota_performance",
+    "mart_customer_churn_rate"
   ]
 }

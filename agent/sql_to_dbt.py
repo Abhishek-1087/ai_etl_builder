@@ -87,11 +87,9 @@ def _remove_create_statements(sql):
     sql = sql.rstrip().rstrip(";").strip()
     return sql
 
-
 def _convert_table_refs(sql):
-
     protected = {}
-    counter = [0]
+    counter   = [0]
 
     def protect(m):
         key = f"__REF_{counter[0]}__"
@@ -102,10 +100,14 @@ def _convert_table_refs(sql):
     # Protect already-wrapped {{ ref(...) }} blocks
     sql = re.sub(r"\{\{[^}]+\}\}", protect, sql)
 
-    # FROM/JOIN schema.table → FROM/JOIN {{ ref('stg_table') }}
+    # FROM/JOIN schema.table (real dot) → ref('stg_table')
+    # Extra guard: don't match __PLACEHOLDER__ patterns
     def schema_dot_to_ref(m):
         keyword = m.group(1)
         table   = m.group(3).lower()
+        # Skip placeholders
+        if table.startswith("_") or table.startswith("ref"):
+            return m.group(0)
         if not table.startswith("stg_"):
             table = f"stg_{table}"
         return f"{keyword} {{{{ ref('{table}') }}}}"
@@ -115,16 +117,17 @@ def _convert_table_refs(sql):
         schema_dot_to_ref, sql, flags=re.IGNORECASE
     )
 
-    # FROM/JOIN bare_table (no dot, not already a ref placeholder)
+    # FROM/JOIN bare table (no dot)
     def bare_to_ref(m):
         keyword = m.group(1)
+        space   = m.group(2)
         table   = m.group(3).lower()
-        # Skip if it looks like a subquery or CTE alias (short, no underscore)
-        if len(table) <= 2:
+        # Skip placeholders and very short names (aliases)
+        if table.startswith("_") or len(table) <= 2:
             return m.group(0)
         if not table.startswith("stg_"):
             table = f"stg_{table}"
-        return f"{keyword} {{{{ ref('{table}') }}}}"
+        return f"{keyword}{space}{{{{ ref('{table}') }}}}"
 
     sql = re.sub(
         r"(FROM|JOIN)(\s+)(?!\{\{)([a-zA-Z_][a-zA-Z0-9_]*)\b(?!\s*\()",
@@ -136,7 +139,6 @@ def _convert_table_refs(sql):
         sql = sql.replace(key, val)
 
     return sql
-
 
 def _ensure_aliases(sql):
     """

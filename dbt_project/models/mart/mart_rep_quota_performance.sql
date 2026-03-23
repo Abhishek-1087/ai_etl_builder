@@ -3,9 +3,9 @@
 SELECT
     o.rep_id,
     COUNT(DISTINCT o.order_id) AS total_orders,
-    AVG(o.discount_pct)         AS avg_discount_pct,
+    AVG(o.discount_pct) AS avg_discount_pct,
     SUM(CASE WHEN o.status = 'Delivered' THEN 1 ELSE 0 END) AS delivered_orders,
-    SUM(CASE WHEN o.status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
+    SUM(CASE WHEN o.status = 'Cancelled'  THEN 1 ELSE 0 END) AS cancelled_orders,
     c.city,
     c.state,
     c.segment,
