@@ -1,0 +1,359 @@
+{
+  "run_at": "2026-03-20T07:33:38.891660Z",
+  "pipeline_status": "SUCCESS",
+  "overall_trust_score": 96.4,
+  "tables_profiled": 6,
+  "mart_models_generated": 7,
+  "schema_drift": {
+    "has_drift": false,
+    "new_tables": [],
+    "removed_tables": [],
+    "changed_tables": {}
+  },
+  "data_quality": [
+    {
+      "table": "CUSTOMER",
+      "row_count": 500,
+      "trust_score": 100.0,
+      "avg_null_pct": 0.0,
+      "warnings": [],
+      "columns": {
+        "CUSTOMER_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 500
+        },
+        "FIRST_NAME": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 30
+        },
+        "LAST_NAME": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 20
+        },
+        "EMAIL": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 500
+        },
+        "PHONE": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 500
+        },
+        "CITY": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 15
+        },
+        "STATE": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 12
+        },
+        "COUNTRY": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 1
+        },
+        "SEGMENT": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 4
+        },
+        "SIGNUP_DATE": {
+          "type": "DATE",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "IS_ACTIVE": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        }
+      }
+    },
+    {
+      "table": "INVOICE",
+      "row_count": 1135,
+      "trust_score": 96.6,
+      "avg_null_pct": 3.43,
+      "warnings": [
+        "PAYMENT_DATE: 37.71% nulls"
+      ],
+      "columns": {
+        "INVOICE_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 1135
+        },
+        "ORDER_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 1135
+        },
+        "CUSTOMER_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 452
+        },
+        "INVOICE_DATE": {
+          "type": "DATE",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "DUE_DATE": {
+          "type": "DATE",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "SUBTOTAL_INR": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "TAX_PCT": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "TAX_AMOUNT_INR": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "TOTAL_INR": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "IS_PAID": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "PAYMENT_DATE": {
+          "type": "DATE",
+          "null_pct": 37.71,
+          "distinct_count": null
+        }
+      }
+    },
+    {
+      "table": "ORDERS",
+      "row_count": 2000,
+      "trust_score": 81.7,
+      "avg_null_pct": 18.28,
+      "warnings": [
+        "SHIP_DATE: 43.25% nulls",
+        "DELIVERY_DATE: 57.80% nulls",
+        "NOTES: 100.00% nulls"
+      ],
+      "columns": {
+        "ORDER_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 2000
+        },
+        "CUSTOMER_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 490
+        },
+        "REP_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 30
+        },
+        "ORDER_DATE": {
+          "type": "DATE",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "SHIP_DATE": {
+          "type": "DATE",
+          "null_pct": 43.25,
+          "distinct_count": null
+        },
+        "DELIVERY_DATE": {
+          "type": "DATE",
+          "null_pct": 57.8,
+          "distinct_count": null
+        },
+        "STATUS": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 5
+        },
+        "CHANNEL": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 5
+        },
+        "PAYMENT_METHOD": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 5
+        },
+        "DISCOUNT_PCT": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "NOTES": {
+          "type": "TEXT",
+          "null_pct": 100.0,
+          "distinct_count": 0
+        }
+      }
+    },
+    {
+      "table": "ORDER_ITEM",
+      "row_count": 3818,
+      "trust_score": 100.0,
+      "avg_null_pct": 0.0,
+      "warnings": [],
+      "columns": {
+        "ORDER_ITEM_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 3818
+        },
+        "ORDER_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 1716
+        },
+        "PRODUCT_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 60
+        },
+        "QUANTITY": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "UNIT_PRICE": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "DISCOUNT_PCT": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "LINE_TOTAL": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        }
+      }
+    },
+    {
+      "table": "PRODUCT",
+      "row_count": 60,
+      "trust_score": 100.0,
+      "avg_null_pct": 0.0,
+      "warnings": [],
+      "columns": {
+        "PRODUCT_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 60
+        },
+        "PRODUCT_NAME": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 60
+        },
+        "CATEGORY": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 6
+        },
+        "SUB_CATEGORY": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 6
+        },
+        "UNIT_PRICE": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "UNIT_COST": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "SKU": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 60
+        },
+        "IS_ACTIVE": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        }
+      }
+    },
+    {
+      "table": "SALES_REP",
+      "row_count": 30,
+      "trust_score": 100.0,
+      "avg_null_pct": 0.0,
+      "warnings": [],
+      "columns": {
+        "REP_ID": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 30
+        },
+        "FIRST_NAME": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 17
+        },
+        "LAST_NAME": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 15
+        },
+        "EMAIL": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 30
+        },
+        "REGION": {
+          "type": "TEXT",
+          "null_pct": 0.0,
+          "distinct_count": 5
+        },
+        "HIRE_DATE": {
+          "type": "DATE",
+          "null_pct": 0.0,
+          "distinct_count": null
+        },
+        "QUOTA_INR": {
+          "type": "NUMBER",
+          "null_pct": 0.0,
+          "distinct_count": null
+        }
+      }
+    }
+  ],
+  "mart_models": [
+    "mart_total_invoices_per_month",
+    "mart_unpaid_invoice_countdown",
+    "mart_active_customers_segmentation",
+    "mart_top_10_products_mostly_ordered",
+    "mart_best_rep_performance",
+    "mart_revenue_by_region",
+    "mart_customer_signup_trends"
+  ]
+}

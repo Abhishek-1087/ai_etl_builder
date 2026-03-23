@@ -1,0 +1,72 @@
+{
+  "captured_at": "2026-03-20T07:31:37.986558",
+  "schema": {
+    "CUSTOMER": [
+      "CUSTOMER_ID",
+      "FIRST_NAME",
+      "LAST_NAME",
+      "EMAIL",
+      "PHONE",
+      "CITY",
+      "STATE",
+      "COUNTRY",
+      "SEGMENT",
+      "SIGNUP_DATE",
+      "IS_ACTIVE"
+    ],
+    "INVOICE": [
+      "INVOICE_ID",
+      "ORDER_ID",
+      "CUSTOMER_ID",
+      "INVOICE_DATE",
+      "DUE_DATE",
+      "SUBTOTAL_INR",
+      "TAX_PCT",
+      "TAX_AMOUNT_INR",
+      "TOTAL_INR",
+      "IS_PAID",
+      "PAYMENT_DATE"
+    ],
+    "ORDERS": [
+      "ORDER_ID",
+      "CUSTOMER_ID",
+      "REP_ID",
+      "ORDER_DATE",
+      "SHIP_DATE",
+      "DELIVERY_DATE",
+      "STATUS",
+      "CHANNEL",
+      "PAYMENT_METHOD",
+      "DISCOUNT_PCT",
+      "NOTES"
+    ],
+    "ORDER_ITEM": [
+      "ORDER_ITEM_ID",
+      "ORDER_ID",
+      "PRODUCT_ID",
+      "QUANTITY",
+      "UNIT_PRICE",
+      "DISCOUNT_PCT",
+      "LINE_TOTAL"
+    ],
+    "PRODUCT": [
+      "PRODUCT_ID",
+      "PRODUCT_NAME",
+      "CATEGORY",
+      "SUB_CATEGORY",
+      "UNIT_PRICE",
+      "UNIT_COST",
+      "SKU",
+      "IS_ACTIVE"
+    ],
+    "SALES_REP": [
+      "REP_ID",
+      "FIRST_NAME",
+      "LAST_NAME",
+      "EMAIL",
+      "REGION",
+      "HIRE_DATE",
+      "QUOTA_INR"
+    ]
+  }
+}

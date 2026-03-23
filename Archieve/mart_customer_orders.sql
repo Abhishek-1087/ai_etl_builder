@@ -1,0 +1,1 @@
+SELECT c.customer_id, COUNT(o.order_id) AS total_orders FROM {{ ref('customer') }} c LEFT JOIN {{ ref('order_detail') }} o ON c.customer_id = o.customer_id GROUP BY c.customer_id

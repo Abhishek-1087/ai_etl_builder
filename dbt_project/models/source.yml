@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    database: SOURCE
+    schema: AI_RAW
+
+    tables:
+      - name: CUSTOMER
+      - name: PRODUCT
+      - name: ORDERS
+      - name: ORDER_ITEM
+      - name: INVOICE
+      - name: SALES_REP
